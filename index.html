@@ -1,0 +1,719 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#fffdf7" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#1e1419" media="(prefers-color-scheme: dark)">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Ariart">
+<meta name="description" content="Calculadora de precios de impresión de Ariart.">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="icon" type="image/png" href="icon-192.png">
+<title>Ariart Precios</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600&family=Playfair+Display:ital,wght@0,600;0,800;1,600;1,800&display=swap">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<style>
+/* Identidad Ariart: crema cálido, rosa de marca, verde lima como acento de detalle. Una columna pensada para el celular; la etiqueta de precio rosa es la pieza protagonista. */
+:root {
+  color-scheme: light;
+  --bg: #fffdf7;
+  --bg-soft: #f7e9b5;
+  --chip: #fbf4e1;
+  --surface: #ffffff;
+  --fg: #3a2a30;
+  --muted: #7a6770;
+  --line: #efe2c9;
+  --pink: #d94f7d;
+  --pink-soft: #f3a6b8;
+  --green: #c8d957;
+  --wordmark: #d94f7d;
+  --accent: #c23f6d;
+  --accent-ink: #ffffff;
+  --tag-bg: #c23f6d;
+  --tag-fg: #fff6e8;
+  --tag-muted: #fff1f5;
+  --blob-g: rgba(200, 217, 87, .30);
+  --blob-p: rgba(243, 166, 184, .34);
+  --ink-c: #00a6d6;
+  --ink-m: #e5127d;
+  --ink-y: #f2c200;
+  --ink-k: #3a2a30;
+  --good: #5f7320;
+  --warn: #a35f00;
+  --font-display: "Playfair Display", Georgia, "Times New Roman", serif;
+  --font-body: "Montserrat", system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #1e1419; --bg-soft: #2b1d24; --chip: #33232b; --surface: #2a1c23; --fg: #fbeff2; --muted: #c9aeb8; --line: #48323c;
+    --wordmark: #f28db0; --accent: #f3a6b8; --accent-ink: #3b1021; --tag-bg: #b8386a; --tag-fg: #fff6e8; --tag-muted: #ffe4ec;
+    --blob-g: rgba(200, 217, 87, .10); --blob-p: rgba(243, 166, 184, .14);
+    --ink-k: #e9d9df; --good: #c8d957; --warn: #f0b85a; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #1e1419; --bg-soft: #2b1d24; --chip: #33232b; --surface: #2a1c23; --fg: #fbeff2; --muted: #c9aeb8; --line: #48323c;
+  --wordmark: #f28db0; --accent: #f3a6b8; --accent-ink: #3b1021; --tag-bg: #b8386a; --tag-fg: #fff6e8; --tag-muted: #ffe4ec;
+  --blob-g: rgba(200, 217, 87, .10); --blob-p: rgba(243, 166, 184, .14);
+  --ink-k: #e9d9df; --good: #c8d957; --warn: #f0b85a; color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body {
+  background-color: var(--bg);
+  background-image: radial-gradient(420px 280px at 100% 0%, var(--blob-g), transparent 70%), radial-gradient(380px 260px at 0% 0%, var(--blob-p), transparent 70%);
+  background-repeat: no-repeat;
+  color: var(--fg);
+  font-family: var(--font-body); font-size: 14.5px; line-height: 1.5;
+  padding-inline: 16px; padding-block: 22px 40px;
+}
+.wrap { max-width: 640px; margin-inline: auto; display: flex; flex-direction: column; gap: 14px; }
+h1, h2, legend { margin: 0; }
+
+.brand { display: flex; align-items: center; gap: 14px; padding-block: 4px 2px; }
+.iso { width: 68px; height: 68px; flex: none; }
+.iso .ring, .iso .a { stroke: var(--pink); }
+.iso .heart { fill: var(--pink); }
+.iso .spark { fill: var(--green); }
+.lockup { display: flex; flex-direction: column; min-width: 0; }
+h1 { font-family: var(--font-display); font-style: italic; font-weight: 800; font-size: 44px; line-height: 1; letter-spacing: -0.01em; color: var(--wordmark); display: flex; align-items: flex-end; gap: 6px; }
+h1 svg { width: 20px; height: 20px; margin-bottom: 8px; fill: var(--pink); flex: none; }
+.swoosh { width: 190px; max-width: 70%; height: auto; display: block; margin-top: 2px; }
+.swoosh path { stroke: var(--green); }
+.sub { font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--wordmark); font-weight: 500; margin-top: 7px; }
+.lead { font-size: 13px; color: var(--muted); }
+
+.panel { background: var(--surface); border: 1px solid var(--line); border-radius: 16px; padding: 16px; display: flex; flex-direction: column; gap: 14px; min-width: 0; }
+.drop { display: flex; flex-direction: column; gap: 4px; align-items: flex-start; border: 1.5px dashed var(--pink-soft); border-radius: 12px; padding: 16px; cursor: pointer; background: var(--chip); transition: border-color .15s, background-color .15s; }
+.drop:hover, .drop.over { border-color: var(--pink); background: color-mix(in srgb, var(--pink-soft) 22%, var(--chip)); }
+.drop:focus-within { outline: 2px solid var(--accent); outline-offset: 2px; }
+.drop input { position: absolute; width: 1px; height: 1px; opacity: 0; }
+.drop strong { font-family: var(--font-display); font-weight: 800; font-size: 19px; }
+.drop span { color: var(--muted); font-size: 12.5px; }
+.status { font-size: 12.5px; color: var(--muted); min-height: 1.4em; overflow-wrap: anywhere; }
+.status.error { color: var(--warn); font-weight: 600; }
+
+.items { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 8px; }
+.item { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; border: 1px solid var(--line); border-radius: 12px; padding: 8px; background: var(--chip); }
+.ithumb { width: 44px; height: 44px; object-fit: contain; background: #fff; border: 1px solid var(--line); border-radius: 8px; flex: none; }
+.imeta { flex: 1 1 140px; min-width: 0; display: flex; flex-direction: column; }
+.imeta b { font-weight: 600; font-size: 13.5px; overflow-wrap: anywhere; }
+.imeta small { font-size: 11px; color: var(--muted); }
+.item select { font: inherit; font-size: 12.5px; color: var(--fg); background: var(--surface); border: 1px solid var(--line); border-radius: 9px; padding: 8px; max-width: 100%; }
+.item select:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+.x { font: inherit; font-size: 20px; line-height: 1; width: 36px; height: 36px; border: 1px solid var(--line); background: var(--surface); color: var(--muted); border-radius: 9px; cursor: pointer; flex: none; }
+.x:hover { color: var(--fg); border-color: var(--pink-soft); }
+.x:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+fieldset { border: 0; margin: 0; padding: 0; min-width: 0; display: flex; flex-direction: column; gap: 7px; }
+legend { font-size: 10.5px; font-weight: 600; letter-spacing: .14em; text-transform: uppercase; color: var(--wordmark); padding: 0; margin-bottom: 7px; }
+.seg { display: flex; flex-wrap: wrap; gap: 6px; }
+.seg label { position: relative; flex: 1 1 0; min-width: 96px; display: flex; }
+.seg input { position: absolute; opacity: 0; inset: 0; margin: 0; cursor: pointer; }
+.seg span { display: flex; flex-direction: column; gap: 1px; width: 100%; padding: 9px 11px; border: 1px solid var(--line); border-radius: 12px; background: var(--chip); font-weight: 500; font-size: 13px; line-height: 1.25; }
+.seg span small { font-size: 10.5px; color: var(--muted); font-weight: 400; }
+.seg input:checked + span { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); font-weight: 600; }
+.seg input:checked + span small { color: inherit; opacity: .9; }
+.seg input:focus-visible + span { outline: 2px solid var(--accent); outline-offset: 2px; }
+.row2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 14px; }
+
+.stepper { display: flex; align-items: stretch; gap: 6px; }
+.stepper button, .btn { font: inherit; font-weight: 600; border: 1px solid var(--line); background: var(--chip); color: var(--fg); border-radius: 12px; cursor: pointer; }
+.stepper button { width: 46px; font-size: 20px; line-height: 1; }
+.stepper button:focus-visible, .btn:focus-visible, summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.stepper input { width: 84px; text-align: center; font-size: 18px; padding: 8px 4px; }
+input[type="number"] { font: inherit; color: var(--fg); background: var(--chip); border: 1px solid var(--line); border-radius: 10px; padding: 8px 10px; width: 100%; min-width: 0; font-size: 14px; font-variant-numeric: tabular-nums; }
+input[type="number"]:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+
+.tag { position: relative; overflow: hidden; background: var(--tag-bg); color: var(--tag-fg); border-radius: 20px; padding: 20px 20px 18px; display: flex; flex-direction: column; gap: 6px; }
+.tag .lab { font-size: 11px; font-weight: 600; letter-spacing: .16em; text-transform: uppercase; color: var(--tag-muted); display: flex; justify-content: space-between; gap: 10px; flex-wrap: wrap; position: relative; }
+.pricewrap { position: relative; align-self: flex-start; max-width: 100%; }
+.price { font-family: var(--font-display); font-weight: 800; font-size: clamp(60px, 19vw, 96px); line-height: 1; letter-spacing: -0.02em; font-variant-numeric: lining-nums tabular-nums; font-feature-settings: "lnum"; }
+.price-swoosh { display: block; width: 100%; height: 12px; margin-top: -2px; }
+.price-swoosh path { stroke: var(--green); }
+.tag .per { font-size: 13.5px; font-weight: 500; color: var(--tag-muted); position: relative; }
+.pills { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px; position: relative; }
+.pill { font-size: 11.5px; font-weight: 600; padding: 4px 11px; border-radius: 99px; background: color-mix(in srgb, var(--tag-fg) 18%, transparent); border: 1px solid color-mix(in srgb, var(--tag-fg) 40%, transparent); }
+.tag .sp { position: absolute; fill: var(--green); pointer-events: none; }
+.tag .sp.s1 { width: 30px; height: 30px; right: 22px; top: 18px; }
+.tag .sp.s2 { width: 16px; height: 16px; right: 62px; top: 52px; fill: var(--tag-fg); opacity: .85; }
+.tag .sp.s3 { width: 20px; height: 20px; right: 28px; top: 70px; }
+
+.meters { display: flex; flex-direction: column; gap: 10px; min-width: 0; }
+.meter { display: grid; grid-template-columns: 76px minmax(0, 1fr) 46px; gap: 8px; align-items: center; font-size: 12.5px; }
+.meter b { font-weight: 500; }
+.meter .track { height: 10px; background: var(--chip); border: 1px solid var(--line); border-radius: 99px; overflow: hidden; }
+.meter .fill { height: 100%; min-width: 3px; border-radius: 99px; transition: width .35s ease; }
+.meter output { font-size: 12.5px; text-align: right; font-variant-numeric: tabular-nums; font-weight: 500; }
+.k { background: var(--ink-k); } .c { background: var(--ink-c); } .m { background: var(--ink-m); } .y { background: var(--ink-y); }
+@media (prefers-reduced-motion: reduce) { .meter .fill, .drop { transition: none; } }
+
+h2 { font-family: var(--font-display); font-size: 20px; font-weight: 800; }
+.receipt { font-size: 13px; display: flex; flex-direction: column; gap: 6px; font-variant-numeric: tabular-nums; }
+.receipt .ln { display: flex; gap: 8px; align-items: baseline; }
+.receipt .ln::after { content: ""; order: 2; flex: 1; border-bottom: 1.5px dotted var(--pink-soft); transform: translateY(-3px); }
+.receipt .ln span:first-child { order: 1; }
+.receipt .ln span:last-child { order: 3; }
+.receipt .tot { font-weight: 600; border-top: 1px solid var(--line); padding-top: 8px; margin-top: 3px; }
+.receipt .tot::after { display: none; }
+.receipt .tot span:first-child { flex: 1; }
+.note { font-size: 12px; color: var(--muted); }
+.good { color: var(--good); font-weight: 600; }
+
+.scroll { overflow-x: auto; max-height: 280px; overflow-y: auto; border: 1px solid var(--line); border-radius: 12px; }
+table { border-collapse: collapse; width: 100%; font-size: 12.5px; font-variant-numeric: tabular-nums; }
+th, td { text-align: left; padding: 7px 10px; white-space: nowrap; border-bottom: 1px solid var(--line); }
+th { font-size: 10px; letter-spacing: .1em; text-transform: uppercase; color: var(--wordmark); position: sticky; top: 0; background: var(--surface); }
+td.num, th.num { text-align: right; }
+tr:last-child td { border-bottom: 0; }
+
+details.panel { gap: 0; }
+summary { cursor: pointer; font-family: var(--font-display); font-weight: 800; font-size: 20px; list-style: none; display: flex; justify-content: space-between; align-items: center; gap: 10px; }
+summary::-webkit-details-marker { display: none; }
+summary::after { content: "+"; font-family: var(--font-body); font-size: 22px; color: var(--wordmark); }
+details[open] summary::after { content: "–"; }
+.settings { display: flex; flex-direction: column; gap: 18px; margin-top: 14px; }
+.grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; }
+.fld { display: flex; flex-direction: column; gap: 4px; font-size: 12px; color: var(--muted); min-width: 0; }
+.fld em { font-style: normal; font-size: 10px; letter-spacing: .06em; text-transform: uppercase; color: var(--warn); margin-left: 4px; font-weight: 600; }
+.btn { padding: 10px 16px; align-self: flex-start; }
+.foot { display: flex; flex-direction: column; align-items: center; gap: 4px; text-align: center; padding-block: 8px 0; }
+.foot .tl { font-family: var(--font-display); font-style: italic; font-weight: 600; font-size: 20px; color: var(--wordmark); display: flex; align-items: center; gap: 6px; }
+.foot .tl svg { width: 14px; height: 14px; fill: var(--pink); }
+[hidden] { display: none !important; }
+
+html { padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); -webkit-text-size-adjust: 100%; }
+body { margin: 0; }
+img { max-width: 100%; }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <header class="brand">
+    <svg class="iso" viewBox="0 0 100 100" aria-hidden="true">
+      <circle class="ring" cx="50" cy="50" r="38" fill="none" stroke-width="5.5"/>
+      <path class="a" d="M31 74 L50 24 L69 74 M38 58 H62 M44 40 L50 29 L56 40" fill="none" stroke-width="5.5" stroke-linecap="round" stroke-linejoin="round"/>
+      <path class="spark" d="M12 0 C13 8 16 11 24 12 C16 13 13 16 12 24 C11 16 8 13 0 12 C8 11 11 8 12 0 Z" transform="translate(4 8) scale(.62)"/>
+      <path class="spark" d="M12 0 C13 8 16 11 24 12 C16 13 13 16 12 24 C11 16 8 13 0 12 C8 11 11 8 12 0 Z" transform="translate(80 20) scale(.36)"/>
+      <path class="heart" d="M10 18 C2 12 0 8 0 5.2 C0 2.4 2.1 0.5 4.6 0.5 C6.9 0.5 8.6 1.9 10 3.9 C11.4 1.9 13.1 0.5 15.4 0.5 C17.9 0.5 20 2.4 20 5.2 C20 8 18 12 10 18 Z" transform="translate(76 70) scale(.62)"/>
+    </svg>
+    <div class="lockup">
+      <h1>Ariart<svg viewBox="0 0 20 18" aria-hidden="true"><path d="M10 18 C2 12 0 8 0 5.2 C0 2.4 2.1 0.5 4.6 0.5 C6.9 0.5 8.6 1.9 10 3.9 C11.4 1.9 13.1 0.5 15.4 0.5 C17.9 0.5 20 2.4 20 5.2 C20 8 18 12 10 18 Z"/></svg></h1>
+      <svg class="swoosh" viewBox="0 0 190 12" aria-hidden="true"><path d="M3 8 C50 1 110 11 187 3" fill="none" stroke-width="3.5" stroke-linecap="round"/></svg>
+      <div class="sub">Crochet · Sublimación · Papelería</div>
+    </div>
+  </header>
+  <div class="lead">Subí lo que vas a imprimir y te digo cuánto cobrar por cada hoja.</div>
+
+  <section class="panel" aria-label="Archivos a imprimir">
+    <label class="drop" id="drop" for="file">
+      <strong>Subí tus archivos</strong>
+      <span>PDF o imágenes (JPG, PNG). Podés elegir varios a la vez y seguir agregando. Mejor el original que una foto de la hoja.</span>
+      <input id="file" type="file" accept="application/pdf,image/*" multiple>
+    </label>
+    <div class="status" id="status" role="status" aria-live="polite"></div>
+    <ul class="items" id="items"></ul>
+    <button type="button" class="btn" id="clear" hidden>Vaciar lista</button>
+  </section>
+
+  <section class="panel" aria-label="Opciones de impresión">
+    <fieldset id="layoutBox" hidden>
+      <legend>Cómo se imprimen las imágenes</legend>
+      <div class="seg" id="segLayout"></div>
+      <div class="note" id="layoutNote"></div>
+    </fieldset>
+    <fieldset><legend>Tipo de papel</legend><div class="seg" id="segPaper"></div></fieldset>
+    <div class="row2">
+      <fieldset><legend>Color</legend><div class="seg" id="segMode"></div></fieldset>
+      <fieldset><legend>Calidad</legend><div class="seg" id="segQuality"></div></fieldset>
+    </div>
+    <fieldset><legend>Copias</legend>
+      <div class="stepper">
+        <button type="button" id="minus" aria-label="Menos copias">−</button>
+        <input id="copies" type="number" min="1" max="9999" step="1" value="1" inputmode="numeric" aria-label="Cantidad de copias">
+        <button type="button" id="plus" aria-label="Más copias">+</button>
+      </div>
+    </fieldset>
+  </section>
+
+  <section class="tag" aria-label="Precio sugerido" aria-live="polite">
+    <svg class="sp s1" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 0 C13 8 16 11 24 12 C16 13 13 16 12 24 C11 16 8 13 0 12 C8 11 11 8 12 0 Z"/></svg>
+    <svg class="sp s2" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 0 C13 8 16 11 24 12 C16 13 13 16 12 24 C11 16 8 13 0 12 C8 11 11 8 12 0 Z"/></svg>
+    <svg class="sp s3" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 0 C13 8 16 11 24 12 C16 13 13 16 12 24 C11 16 8 13 0 12 C8 11 11 8 12 0 Z"/></svg>
+    <div class="lab"><span>Cobrar</span><span id="tagSheets"></span></div>
+    <div class="pricewrap">
+      <div class="price" id="price">$0.00</div>
+      <svg class="price-swoosh" viewBox="0 0 200 12" preserveAspectRatio="none" aria-hidden="true"><path d="M3 8 C50 1 120 11 197 3" fill="none" stroke-width="4" stroke-linecap="round" vector-effect="non-scaling-stroke"/></svg>
+    </div>
+    <div class="per" id="per"></div>
+    <div class="pills" id="pills"></div>
+  </section>
+
+  <section class="panel" aria-label="Cobertura de tinta">
+    <h2>Cuánta tinta lleva</h2>
+    <div class="meters" id="meters"></div>
+    <div class="scroll" id="pagesBox" hidden>
+      <table>
+        <thead><tr><th>Hoja</th><th>Contenido</th><th>Modo</th><th class="num">Negro</th><th class="num">Color</th><th class="num">Precio</th></tr></thead>
+        <tbody id="pagesBody"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="panel" aria-label="Desglose">
+    <h2>Desglose</h2>
+    <div class="receipt" id="receipt"></div>
+    <div class="note" id="floorNote"></div>
+  </section>
+
+  <details class="panel">
+    <summary>Ajustar precios y costos</summary>
+    <div class="settings" id="settings"></div>
+  </details>
+  <footer class="foot">
+    <div class="note">Tus archivos se analizan en este dispositivo y no se envían a ningún servidor.</div>
+    <div class="tl">Detalles que se sienten<svg viewBox="0 0 20 18" aria-hidden="true"><path d="M10 18 C2 12 0 8 0 5.2 C0 2.4 2.1 0.5 4.6 0.5 C6.9 0.5 8.6 1.9 10 3.9 C11.4 1.9 13.1 0.5 15.4 0.5 C17.9 0.5 20 2.4 20 5.2 C20 8 18 12 10 18 Z"/></svg></div>
+  </footer>
+</div>
+
+<script>
+(function () {
+  "use strict";
+  var KEY = "precio-por-hoja.v2";
+  var DEF = {
+    bondPack: 4.25, bondN: 500, stickPack: 3, stickN: 12, opaPack: 18, opaN: 100, fotoPack: 0.5, fotoN: 1,
+    kBottle: 18, kMl: 127, cBottle: 14.5, cMl: 70, kPage: 1.0, cPage: 0.5,
+    wear: 0.05, margin: 80, minBN: 0.15, minColor: 0.25, step: 0.05, hq: 30, fill: 85
+  };
+  var GROUPS = [
+    { title: "Papel (paquete completo)", fields: [
+      ["bondPack", "Bond: precio de la resma", "$"], ["bondN", "Bond: hojas por resma", "hojas"],
+      ["stickPack", "Sticker: precio del paquete", "$"], ["stickN", "Sticker: hojas por paquete", "hojas"],
+      ["opaPack", "Opalina: precio de la resma", "$"], ["opaN", "Opalina: hojas por resma", "hojas"],
+      ["fotoPack", "Fotográfico: precio por hoja", "$"]
+    ]},
+    { title: "Tinta", fields: [
+      ["kBottle", "Botella negra: precio", "$"], ["kMl", "Botella negra: ml", "ml"],
+      ["cBottle", "Botella de color: precio de cada una", "$"], ["cMl", "Botella de color: ml", "ml"],
+      ["kPage", "Negro por hoja al 100%", "ml", true], ["cPage", "Cada color por hoja al 100%", "ml", true]
+    ]},
+    { title: "Negocio", fields: [
+      ["wear", "Desgaste por hoja (cabezal, luz, tiempo)", "$", true], ["margin", "Ganancia sobre el costo", "%", true],
+      ["minBN", "Precio mínimo blanco y negro", "$"], ["minColor", "Precio mínimo a color", "$", true],
+      ["step", "Redondear hacia arriba a", "$"], ["hq", "Recargo de tinta en calidad alta", "%", true],
+      ["fill", "Hoja cubierta por fotos al juntarlas todas", "%", true]
+    ]}
+  ];
+  /* Tamaños de foto. u = parte de la hoja que ocupa al acomodarla (cuántas caben), area = parte de la hoja que cubre de tinta. */
+  var SIZES = {
+    full: { label: "Hoja completa", cap: 1, u: 1, area: 1 },
+    half: { label: "Media hoja", cap: 2, u: 0.5, area: 0.5 },
+    s57: { label: "5×7 in", cap: 1, u: 1, area: 0.37 },
+    s46: { label: "4×6 in", cap: 2, u: 0.5, area: 0.26 },
+    s35: { label: "3×5 in", cap: 4, u: 0.25, area: 0.16 }
+  };
+  var SIZE_ORDER = ["full", "half", "s57", "s46", "s35"];
+
+  function loadS() {
+    var s = {}, k;
+    for (k in DEF) s[k] = DEF[k];
+    try {
+      var raw = localStorage.getItem(KEY);
+      if (raw) { var o = JSON.parse(raw); for (k in DEF) if (typeof o[k] === "number" && isFinite(o[k])) s[k] = o[k]; }
+    } catch (e) {}
+    return s;
+  }
+  function saveS() { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) {} }
+  var S = loadS();
+
+  var opts = { paper: "bond", mode: "auto", quality: "normal", layout: "todas", copies: 1 };
+  var items = []; // { id, kind: "sample"|"pdf"|"img", name, meta, thumb, pages: [met] (sample/pdf), met (img), size (img) }
+  var nextId = 1;
+
+  function $(id) { return document.getElementById(id); }
+  function money(n) { return "$" + n.toFixed(2); }
+  function small(n) { return "$" + (n < 1 ? n.toFixed(3) : n.toFixed(2)); }
+  function pct(n) { return (n * 100).toFixed(n < 0.1 ? 1 : 0) + "%"; }
+  function plural(n, a, b) { return n + " " + (n === 1 ? a : b); }
+
+  function paperCost(t) {
+    var n = function (a, b) { return b > 0 ? a / b : 0; };
+    if (t === "sticker") return n(S.stickPack, S.stickN);
+    if (t === "opalina") return n(S.opaPack, S.opaN);
+    if (t === "foto") return n(S.fotoPack, S.fotoN);
+    return n(S.bondPack, S.bondN);
+  }
+  var PAPERS = [["bond", "Bond"], ["sticker", "Sticker"], ["opalina", "Opalina"], ["foto", "Fotográfico"]];
+
+  function seg(el, name, list, value, onChange) {
+    el.innerHTML = "";
+    list.forEach(function (it) {
+      var l = document.createElement("label");
+      var i = document.createElement("input");
+      i.type = "radio"; i.name = name; i.value = it[0]; i.checked = String(it[0]) === String(value);
+      i.addEventListener("change", function () { onChange(it[0]); });
+      var s = document.createElement("span");
+      s.textContent = it[1];
+      if (it[2]) { var sm = document.createElement("small"); sm.textContent = it[2]; s.appendChild(sm); }
+      l.appendChild(i); l.appendChild(s); el.appendChild(l);
+    });
+  }
+  function buildControls() {
+    seg($("segLayout"), "layout", [["una", "Una por hoja"], ["todas", "Todas en una hoja"], ["juntar", "Por tamaño"]], opts.layout, function (v) { opts.layout = v; renderItems(); update(); });
+    seg($("segPaper"), "paper", PAPERS.map(function (p) { return [p[0], p[1], small(paperCost(p[0])) + "/hoja"]; }), opts.paper, function (v) { opts.paper = v; update(); });
+    seg($("segMode"), "mode", [["auto", "Auto"], ["color", "Color"], ["bn", "Blanco y negro"]], opts.mode, function (v) { opts.mode = v; update(); });
+    seg($("segQuality"), "quality", [["normal", "Normal"], ["alta", "Alta"]], opts.quality, function (v) { opts.quality = v; update(); });
+  }
+
+  /* ---------- Análisis de tinta ---------- */
+  function analyze(canvas) {
+    var w = canvas.width, h = canvas.height;
+    var d = canvas.getContext("2d").getImageData(0, 0, w, h).data;
+    var n = w * h, sk = 0, sc = 0, sm = 0, sy = 0, sg = 0, col = 0;
+    for (var i = 0; i < d.length; i += 4) {
+      var r = d[i] / 255, g = d[i + 1] / 255, b = d[i + 2] / 255;
+      var mx = Math.max(r, g, b), mn = Math.min(r, g, b);
+      if (mx > 0.97 && mn > 0.9) continue; // blanco del papel
+      var k = 1 - mx;
+      if (k < 0.999) {
+        var inv = 1 / (1 - k);
+        sc += (1 - r - k) * inv; sm += (1 - g - k) * inv; sy += (1 - b - k) * inv;
+      }
+      sk += k;
+      sg += 1 - (0.299 * r + 0.587 * g + 0.114 * b);
+      if (mx - mn > 0.12) col++;
+    }
+    return { k: sk / n, c: sc / n, m: sm / n, y: sy / n, kg: sg / n, colorFrac: col / n };
+  }
+  function mix(list) { // list de [métricas, parte de la hoja]
+    var o = { k: 0, c: 0, m: 0, y: 0, kg: 0, colorFrac: 0 };
+    list.forEach(function (p) { for (var key in o) o[key] += p[0][key] * p[1]; });
+    return o;
+  }
+
+  /* ---------- Armar las hojas ---------- */
+  function buildSheets() {
+    var sheets = [], imgs = [];
+    items.forEach(function (it) {
+      if (it.kind === "img") {
+        if (opts.layout === "una") {
+          sheets.push({ label: "Imagen: " + it.name, met: it.met, imgs: 1, free: 0 });
+        } else imgs.push(it);
+      } else {
+        it.pages.forEach(function (m, i) {
+          sheets.push({ label: it.kind === "sample" ? "Ejemplo" : it.name + " pág. " + (i + 1), met: m, imgs: 0, free: 0 });
+        });
+      }
+    });
+    if (imgs.length && opts.layout === "todas") {
+      var share = Math.min(1, S.fill / 100) / imgs.length;
+      sheets.push({ label: plural(imgs.length, "foto", "fotos") + " (todas en 1 hoja)",
+        met: mix(imgs.map(function (it) { return [it.met, share]; })), imgs: imgs.length, free: 0 });
+    } else if (imgs.length) {
+      var bins = [];
+      imgs.map(function (it) { return { it: it, sz: SIZES[it.size] || SIZES.s46 }; })
+        .sort(function (a, b) { return b.sz.u - a.sz.u; })
+        .forEach(function (e) {
+          var b = null;
+          for (var i = 0; i < bins.length; i++) if (bins[i].free + 1e-9 >= e.sz.u) { b = bins[i]; break; }
+          if (!b) { b = { free: 1, list: [] }; bins.push(b); }
+          b.list.push(e); b.free -= e.sz.u;
+        });
+      bins.forEach(function (b) {
+        sheets.push({ label: plural(b.list.length, "foto", "fotos") + " (" + Math.round((1 - b.free) * 100) + "% llena)",
+          met: mix(b.list.map(function (e) { return [e.it.met, e.sz.area]; })), imgs: b.list.length, free: b.free });
+      });
+    }
+    return sheets;
+  }
+
+  /* ---------- Cálculo de precio ---------- */
+  function priceSheet(p) {
+    var isColor = opts.mode === "color" || (opts.mode === "auto" && p.colorFrac > 0.005);
+    var kc = isColor ? p.k : p.kg;
+    var cmy = isColor ? p.c + p.m + p.y : 0;
+    var q = opts.quality === "alta" ? 1 + S.hq / 100 : 1;
+    var kMlCost = S.kMl > 0 ? S.kBottle / S.kMl : 0;
+    var cMlCost = S.cMl > 0 ? S.cBottle / S.cMl : 0;
+    var paper = paperCost(opts.paper);
+    var inkK = kc * S.kPage * kMlCost * q;
+    var inkC = cmy * S.cPage * cMlCost * q;
+    var wear = S.wear;
+    var cost = paper + inkK + inkC + wear;
+    var raw = cost * (1 + S.margin / 100);
+    var floor = isColor ? S.minColor : S.minBN;
+    var base = Math.max(raw, floor);
+    var step = S.step > 0 ? S.step : 0.01;
+    var final = Math.ceil(base / step - 1e-9) * step;
+    return { isColor: isColor, kc: kc, c: isColor ? p.c : 0, m: isColor ? p.m : 0, y: isColor ? p.y : 0,
+      paper: paper, inkK: inkK, inkC: inkC, wear: wear, cost: cost, raw: raw, floor: floor, floored: floor > raw, price: final };
+  }
+
+  /* ---------- Pantalla ---------- */
+  function meterRow(label, cls, v) {
+    return '<div class="meter"><b>' + label + '</b><div class="track"><div class="fill ' + cls + '" style="width:' + Math.min(100, v * 100).toFixed(1) + '%"></div></div><output>' + pct(v) + '</output></div>';
+  }
+  function line(a, b, cls) { return '<div class="ln' + (cls ? " " + cls : "") + '"><span>' + a + '</span><span>' + b + '</span></div>'; }
+  function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); }
+
+  function update() {
+    var hasImg = items.some(function (i) { return i.kind === "img"; });
+    $("layoutBox").hidden = !hasImg;
+    $("layoutNote").textContent = opts.layout === "una"
+      ? "Cada imagen ocupa una hoja completa."
+      : opts.layout === "todas"
+        ? "Todas las imágenes van juntas en una sola hoja. Si son muchas, quedan pequeñas."
+        : "Elegí el tamaño de cada foto. Se acomodan juntas y se cobra por las hojas usadas.";
+
+    var copies = Math.max(1, Math.min(9999, Math.floor(Number($("copies").value) || 1)));
+    var sheets = buildSheets();
+    var np = sheets.length;
+    if (!np) {
+      $("price").textContent = "$0.00"; $("tagSheets").textContent = "";
+      $("per").textContent = "Agregá un archivo para ver el precio."; $("pills").innerHTML = "";
+      $("meters").innerHTML = meterRow("Negro", "k", 0) + meterRow("Cian", "c", 0) + meterRow("Magenta", "m", 0) + meterRow("Amarillo", "y", 0);
+      $("pagesBox").hidden = true; $("receipt").innerHTML = ""; $("floorNote").textContent = "";
+      buildPaperLabels(); return;
+    }
+    var res = sheets.map(function (s) { return priceSheet(s.met); });
+    var nSheets = np * copies;
+    var sum = function (f) { return res.reduce(function (a, r) { return a + f(r); }, 0); };
+    var total = sum(function (r) { return r.price; }) * copies;
+    var cost = sum(function (r) { return r.cost; }) * copies;
+    var nColor = res.filter(function (r) { return r.isColor; }).length;
+    var avg = function (f) { return sum(f) / np; };
+    var aK = avg(function (r) { return r.kc; }), aC = avg(function (r) { return r.c; }), aM = avg(function (r) { return r.m; }), aY = avg(function (r) { return r.y; });
+    var nPhotos = sheets.reduce(function (a, s) { return a + s.imgs; }, 0);
+    var onlyPhotos = sheets.every(function (s) { return s.imgs > 0; });
+
+    $("price").textContent = money(total);
+    $("tagSheets").textContent = plural(nSheets, "hoja", "hojas");
+    var minP = Math.min.apply(null, res.map(function (r) { return r.price; }));
+    var maxP = Math.max.apply(null, res.map(function (r) { return r.price; }));
+    var per;
+    if (opts.layout !== "una" && onlyPhotos && nPhotos > 0) per = money(total / (nPhotos * copies)) + " por foto";
+    else if (np === 1) per = money(total / nSheets) + " por hoja";
+    else per = minP === maxP ? money(minP) + " por hoja" : "de " + money(minP) + " a " + money(maxP) + " por hoja";
+    $("per").textContent = per;
+
+    var label;
+    if (nColor * 2 > np) { var lc = (aC + aM + aY) / 3; label = lc < 0.06 ? "Color liviano" : lc < 0.22 ? "Color medio" : "Color pesado o foto"; }
+    else { label = aK < 0.08 ? "Texto liviano" : aK < 0.25 ? "Texto denso o gráficos" : "Mucho negro"; }
+    var pills = '<span class="pill">' + label + "</span>";
+    if (opts.layout !== "una" && nPhotos > 0) pills += '<span class="pill">' + plural(nPhotos, "foto", "fotos") + " en " + plural(sheets.filter(function (s) { return s.imgs > 0; }).length, "hoja", "hojas") + "</span>";
+    if (np > 1) pills += '<span class="pill">' + nColor + " a color · " + (np - nColor) + " en B/N</span>";
+    if (copies > 1) pills += '<span class="pill">' + plural(copies, "copia", "copias") + "</span>";
+    $("pills").innerHTML = pills;
+
+    $("meters").innerHTML = meterRow("Negro", "k", aK) + meterRow("Cian", "c", aC) + meterRow("Magenta", "m", aM) + meterRow("Amarillo", "y", aY);
+
+    $("pagesBox").hidden = np < 2;
+    if (np > 1) {
+      $("pagesBody").innerHTML = res.map(function (r, i) {
+        return "<tr><td>" + (i + 1) + "</td><td>" + esc(sheets[i].label) + "</td><td>" + (r.isColor ? "Color" : "B/N") + '</td><td class="num">' + pct(r.kc) + '</td><td class="num">' + pct((r.c + r.m + r.y) / 3) + '</td><td class="num">' + money(r.price) + "</td></tr>";
+      }).join("");
+    }
+
+    var paper = sum(function (r) { return r.paper; }) * copies, ik = sum(function (r) { return r.inkK; }) * copies,
+        ic = sum(function (r) { return r.inkC; }) * copies, wr = sum(function (r) { return r.wear; }) * copies;
+    var profit = total - cost;
+    $("receipt").innerHTML =
+      line("Papel", small(paper)) + line("Tinta negra", small(ik)) + line("Tinta de color", small(ic)) + line("Desgaste", small(wr)) +
+      line("<b>Costo</b>", "<b>" + small(cost) + "</b>", "tot") +
+      line("Ganancia", '<span class="good">' + small(profit) + "</span>") +
+      line("<b>Cobrar</b>", "<b>" + money(total) + "</b>", "tot");
+    var floored = res.some(function (r) { return r.floored; });
+    var roomLeft = opts.layout === "juntar" && sheets.some(function (s) { return s.imgs > 0 && s.free >= 0.24; });
+    var msg = floored
+      ? "En algunas hojas se aplicó el precio mínimo, porque el costo con ganancia quedó por debajo."
+      : "Precio de cada hoja = costo × (1 + " + S.margin + "%), redondeado hacia arriba a " + money(S.step) + ".";
+    if (roomLeft) msg += " Queda espacio libre en alguna hoja: si sumás más fotos, el costo se reparte.";
+    $("floorNote").textContent = msg;
+    buildPaperLabels();
+  }
+  function buildPaperLabels() {
+    var spans = $("segPaper").querySelectorAll("small");
+    PAPERS.forEach(function (p, i) { if (spans[i]) spans[i].textContent = small(paperCost(p[0])) + "/hoja"; });
+  }
+  function status(msg, err) { var s = $("status"); s.textContent = msg || ""; s.className = "status" + (err ? " error" : ""); }
+
+  /* ---------- Lista de archivos ---------- */
+  function renderItems() {
+    var ul = $("items"); ul.innerHTML = "";
+    items.forEach(function (it) {
+      var li = document.createElement("li"); li.className = "item";
+      var im = document.createElement("img"); im.className = "ithumb"; im.alt = ""; im.src = it.thumb; li.appendChild(im);
+      var meta = document.createElement("div"); meta.className = "imeta";
+      var nm = document.createElement("b"); nm.textContent = it.name;
+      var sm = document.createElement("small"); sm.textContent = it.meta;
+      meta.appendChild(nm); meta.appendChild(sm); li.appendChild(meta);
+      if (it.kind === "img" && opts.layout === "juntar") {
+        var sel = document.createElement("select"); sel.id = "size_" + it.id; sel.setAttribute("aria-label", "Tamaño de " + it.name);
+        SIZE_ORDER.forEach(function (k) {
+          var o = document.createElement("option"); o.value = k; o.textContent = SIZES[k].label + " · " + SIZES[k].cap + " por hoja"; o.selected = it.size === k; sel.appendChild(o);
+        });
+        sel.addEventListener("change", function () { it.size = sel.value; update(); });
+        li.appendChild(sel);
+      }
+      var x = document.createElement("button"); x.type = "button"; x.className = "x"; x.textContent = "×"; x.setAttribute("aria-label", "Quitar " + it.name);
+      x.addEventListener("click", function () { items = items.filter(function (o) { return o.id !== it.id; }); renderItems(); update(); });
+      li.appendChild(x);
+      ul.appendChild(li);
+    });
+    $("clear").hidden = items.length === 0;
+  }
+
+  /* ---------- Archivos ---------- */
+  function newCanvas(w, h) {
+    var c = document.createElement("canvas"); c.width = w; c.height = h;
+    var x = c.getContext("2d", { willReadFrequently: true }); x.fillStyle = "#fff"; x.fillRect(0, 0, w, h);
+    return c;
+  }
+  function thumbOf(src) {
+    var t = newCanvas(88, 88), x = t.getContext("2d");
+    var sc = Math.min(88 / src.width, 88 / src.height), w = src.width * sc, h = src.height * sc;
+    x.drawImage(src, (88 - w) / 2, (88 - h) / 2, w, h);
+    return t.toDataURL("image/jpeg", 0.7);
+  }
+  function makeSample() {
+    var c = newCanvas(480, 621), x = c.getContext("2d");
+    x.fillStyle = "#e5127d"; x.fillRect(0, 0, 480, 70);
+    x.fillStyle = "#fff"; x.font = "700 30px sans-serif"; x.fillText("VENTA DE VERANO", 24, 46);
+    var g = x.createLinearGradient(24, 100, 456, 330);
+    g.addColorStop(0, "#00a6d6"); g.addColorStop(0.5, "#f2c200"); g.addColorStop(1, "#e5127d");
+    x.fillStyle = g; x.fillRect(24, 100, 432, 230);
+    x.fillStyle = "#1b2a3a"; x.beginPath(); x.arc(330, 215, 70, 0, Math.PI * 2); x.fill();
+    x.fillStyle = "#222";
+    for (var i = 0; i < 14; i++) x.fillRect(24, 360 + i * 17, i % 5 === 4 ? 240 : 432, 5);
+    return c;
+  }
+  function loadSample() {
+    var c = makeSample();
+    items = [{ id: nextId++, kind: "sample", name: "Volante de muestra con texto y foto", meta: "EJEMPLO · 1 hoja", thumb: thumbOf(c), pages: [analyze(c)] }];
+    renderItems(); update();
+    status("Subí tus archivos para calcular el precio real.");
+  }
+
+  function readImage(file) {
+    return new Promise(function (res, rej) {
+      var url = URL.createObjectURL(file), img = new Image();
+      img.onload = function () {
+        var sc = Math.min(1, 700 / Math.max(img.naturalWidth, img.naturalHeight));
+        var c = newCanvas(Math.max(1, Math.round(img.naturalWidth * sc)), Math.max(1, Math.round(img.naturalHeight * sc)));
+        c.getContext("2d").drawImage(img, 0, 0, c.width, c.height);
+        URL.revokeObjectURL(url); res({ canvas: c, w: img.naturalWidth, h: img.naturalHeight });
+      };
+      img.onerror = function () { URL.revokeObjectURL(url); rej(new Error("No se pudo abrir " + file.name + ".")); };
+      img.src = url;
+    });
+  }
+  var pdfReady = false;
+  function initPdf() {
+    if (pdfReady) return true;
+    if (!window.pdfjsLib) return false;
+    var blob = new Blob(['importScripts("https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js");'], { type: "text/javascript" });
+    window.pdfjsLib.GlobalWorkerOptions.workerSrc = URL.createObjectURL(blob);
+    pdfReady = true; return true;
+  }
+  async function readPdf(file, label) {
+    if (!initPdf()) throw new Error("No se pudo cargar el lector de PDF. Probá con una imagen.");
+    var data = await file.arrayBuffer();
+    var pdf = await window.pdfjsLib.getDocument({ data: data, isEvalSupported: false }).promise;
+    var total = Math.min(pdf.numPages, 200), pages = [], first = null;
+    for (var i = 1; i <= total; i++) {
+      status(label + " · hoja " + i + " de " + total + (pdf.numPages > total ? " (máximo 200)" : "") + "…");
+      var page = await pdf.getPage(i);
+      var vp = page.getViewport({ scale: 1 });
+      var v = page.getViewport({ scale: 480 / vp.width });
+      var c = newCanvas(Math.round(v.width), Math.round(v.height));
+      await page.render({ canvasContext: c.getContext("2d"), viewport: v }).promise;
+      pages.push(analyze(c));
+      if (i === 1) first = c;
+    }
+    return { pages: pages, first: first };
+  }
+
+  async function readFile(file, label) {
+    var isPdf = file.type === "application/pdf" || /\.pdf$/i.test(file.name);
+    if (isPdf) {
+      var r = await readPdf(file, label);
+      return { id: nextId++, kind: "pdf", name: file.name, meta: "PDF · " + plural(r.pages.length, "hoja", "hojas"), thumb: thumbOf(r.first), pages: r.pages };
+    }
+    if (file.type.indexOf("image/") === 0) {
+      var im = await readImage(file);
+      return { id: nextId++, kind: "img", name: file.name, meta: "Imagen · " + im.w + "×" + im.h + " px", thumb: thumbOf(im.canvas), met: analyze(im.canvas), size: "s46" };
+    }
+    throw new Error(file.name + ": formato no compatible. Usá PDF, JPG o PNG.");
+  }
+
+  async function handleFiles(list) {
+    var files = Array.prototype.slice.call(list || []);
+    if (!files.length) return;
+    var errs = [], ok = 0;
+    for (var i = 0; i < files.length; i++) {
+      var label = "Analizando " + (i + 1) + " de " + files.length;
+      status(label + "…");
+      try {
+        var it = await readFile(files[i], label);
+        items = items.filter(function (o) { return o.kind !== "sample"; });
+        items.push(it); ok++;
+        renderItems(); update();
+      } catch (e) { errs.push(e && e.message ? e.message : "No se pudo analizar " + files[i].name + "."); }
+    }
+    if (errs.length) status(errs.join(" "), true);
+    else status(ok > 1 ? ok + " archivos agregados." : "");
+  }
+
+  /* ---------- Ajustes ---------- */
+  function buildSettings() {
+    var root = $("settings"); root.innerHTML = "";
+    GROUPS.forEach(function (g) {
+      var wrap = document.createElement("fieldset"), lg = document.createElement("legend"), grid = document.createElement("div");
+      lg.textContent = g.title; grid.className = "grid"; wrap.appendChild(lg); wrap.appendChild(grid);
+      g.fields.forEach(function (f) {
+        var l = document.createElement("label"); l.className = "fld"; l.htmlFor = "s_" + f[0];
+        l.appendChild(document.createTextNode(f[1] + " (" + f[2] + ")"));
+        if (f[3]) { var e = document.createElement("em"); e.textContent = "estimado"; l.appendChild(e); }
+        var inp = document.createElement("input"); inp.type = "number"; inp.id = "s_" + f[0]; inp.step = "any"; inp.min = "0"; inp.inputMode = "decimal"; inp.value = S[f[0]];
+        inp.addEventListener("input", function () {
+          var v = parseFloat(inp.value);
+          if (isFinite(v) && v >= 0) { S[f[0]] = v; saveS(); update(); }
+        });
+        l.appendChild(inp); grid.appendChild(l);
+      });
+      root.appendChild(wrap);
+    });
+    var n = document.createElement("div"); n.className = "note";
+    n.textContent = "Los valores marcados como estimado son una primera aproximación. Ajustalos cuando midás cuánto te rinde cada botella. Los cambios se guardan en este dispositivo.";
+    root.appendChild(n);
+    var b = document.createElement("button"); b.type = "button"; b.className = "btn"; b.textContent = "Restablecer valores";
+    b.addEventListener("click", function () { S = {}; for (var k in DEF) S[k] = DEF[k]; saveS(); buildSettings(); update(); });
+    root.appendChild(b);
+  }
+
+  /* ---------- Eventos ---------- */
+  $("file").addEventListener("change", function (e) { var f = e.target.files; handleFiles(f).then(function () { e.target.value = ""; }); });
+  var drop = $("drop");
+  ["dragenter", "dragover"].forEach(function (ev) { drop.addEventListener(ev, function (e) { e.preventDefault(); drop.classList.add("over"); }); });
+  ["dragleave", "drop"].forEach(function (ev) { drop.addEventListener(ev, function (e) { e.preventDefault(); drop.classList.remove("over"); }); });
+  drop.addEventListener("drop", function (e) { if (e.dataTransfer && e.dataTransfer.files.length) handleFiles(e.dataTransfer.files); });
+  $("clear").addEventListener("click", function () { items = []; renderItems(); update(); status("Lista vacía. Subí tus archivos."); });
+  function setCopies(v) { v = Math.max(1, Math.min(9999, Math.floor(v) || 1)); $("copies").value = v; opts.copies = v; update(); }
+  $("minus").addEventListener("click", function () { setCopies(Number($("copies").value) - 1); });
+  $("plus").addEventListener("click", function () { setCopies(Number($("copies").value) + 1); });
+  $("copies").addEventListener("input", function () { var v = Math.floor(Number($("copies").value)); if (v >= 1) { opts.copies = Math.min(9999, v); update(); } });
+  $("copies").addEventListener("change", function () { setCopies(Number($("copies").value)); });
+
+  buildControls();
+  buildSettings();
+  loadSample();
+  if ("serviceWorker" in navigator && (location.protocol === "https:" || location.hostname === "localhost")) navigator.serviceWorker.register("sw.js").catch(function () {});
+})();
+</script>
+</body>
+</html>
